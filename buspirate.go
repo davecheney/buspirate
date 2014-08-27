@@ -1,4 +1,5 @@
 // Package buspirate interfaces with the binary mode of the BusPirate.
+// http://dangerousprototypes.com/docs/Bus_Pirate
 package buspirate
 
 import (
@@ -17,7 +18,7 @@ func Open(dev string) (*BusPirate, error) {
 	return &bp, bp.enterBinaryMode()
 }
 
-// BusPirate represents a connection to a remote BusPirate v4 device.
+// BusPirate represents a connection to a remote BusPirate device.
 type BusPirate struct {
 	term *term.Term
 }
@@ -62,7 +63,15 @@ func (bp *BusPirate) PowerOff() {
 	bp.term.Read(buf)
 }
 
+// SetPWM enables PWM output on the AUX pin with the specified duty cycle.
+// duty is clamped between [0, 1].
 func (bp *BusPirate) SetPWM(duty float64) {
+	if duty > 1.0 {
+		duty = 1.0
+	}
+	if duty < 0.0 {
+		duty = 0.0
+	}
 	PRy := uint16(0x3e7f)
 	OCR := uint16(float64(PRy) * duty)
 	buf := []byte{0x12, 0x00, uint8(OCR >> 8), uint8(OCR), uint8(PRy >> 8), uint8(PRy)}
