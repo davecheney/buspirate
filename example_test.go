@@ -3,7 +3,7 @@ package buspirate
 import "github.com/davecheney/buspirate"
 import "time"
 
-// ExampleBusPirate pulses a LED connected to the AUX pin.
+// Pulse a LED connected to the AUX pin.
 func ExampleBusPirate_SetPWM() {
 	bp, err := buspirate.Open("/dev/ttyACM0")
 	if err != nil {
