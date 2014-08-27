@@ -56,7 +56,7 @@ func (bp *BusPirate) PowerOn() {
 	bp.term.Read(buf)
 }
 
-// PowerOff turns off the 5v and 3v3 refulators.
+// PowerOff turns off the 5v and 3v3 regulators.
 func (bp *BusPirate) PowerOff() {
 	buf := []byte{0x80}
 	bp.term.Write(buf)
