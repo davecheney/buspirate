@@ -66,15 +66,19 @@ func (bp *BusPirate) PowerOff() {
 // SetPWM enables PWM output on the AUX pin with the specified duty cycle.
 // duty is clamped between [0, 1].
 func (bp *BusPirate) SetPWM(duty float64) {
-	if duty > 1.0 {
-		duty = 1.0
-	}
-	if duty < 0.0 {
-		duty = 0.0
-	}
+	clamp(&duty, 0.0, 1.0)
 	PRy := uint16(0x3e7f)
 	OCR := uint16(float64(PRy) * duty)
 	buf := []byte{0x12, 0x00, uint8(OCR >> 8), uint8(OCR), uint8(PRy >> 8), uint8(PRy)}
 	bp.term.Write(buf)
 	bp.term.Read(buf[:1])
+}
+
+func clamp(v *float64, lower, upper float64) {
+	if *v < lower {
+		*v = lower
+	}
+	if *v > upper {
+		*v = upper
+	}
 }
